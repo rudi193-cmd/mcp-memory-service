@@ -5,15 +5,19 @@ from __future__ import annotations
 import asyncio
 from typing import List, Protocol, runtime_checkable
 
-QA_PROMPT_TEMPLATE = """Answer the following question based ONLY on the provided context.
-Give a brief, concise answer. If the answer is not in the context, say "not mentioned".
+QA_PROMPT_TEMPLATE = """Answer the question using ONLY the provided context.
+Rules:
+- Give the shortest possible answer: just the key fact, name, date, or phrase.
+- Do NOT start with "Based on the context", "According to", or any preamble.
+- Do NOT write a full sentence if a word or phrase is enough.
+- If the answer is not in the context, say "not mentioned".
 
 Context:
 {context}
 
 Question: {question}
 
-Answer:"""
+Answer (key fact only):"""
 
 
 def build_qa_prompt(question: str, context: List[str]) -> str:

@@ -71,6 +71,15 @@ CATEGORY_MAP = {
 }
 
 
+def _normalize_dia_ref(dia_ref) -> str:
+    """LoCoMo sometimes attaches multiple dialog refs as a list."""
+    if isinstance(dia_ref, list):
+        return ",".join(str(d) for d in dia_ref if d)
+    if dia_ref is None:
+        return ""
+    return str(dia_ref)
+
+
 def _extract_session_ids(conversation: dict) -> List[str]:
     """Extract sorted session IDs from conversation dict."""
     session_ids = []
@@ -109,7 +118,7 @@ def parse_conversation(entry: dict) -> LocomoConversation:
             for speaker, items in raw_obs.items():
                 for item in items:
                     if isinstance(item, list) and len(item) >= 2:
-                        text, dia_ref = item[0], item[1]
+                        text, dia_ref = item[0], _normalize_dia_ref(item[1])
                     else:
                         text, dia_ref = str(item), ""
                     observations.append(LocomoObservation(
